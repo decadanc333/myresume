@@ -1,0 +1,25 @@
+import requests
+from bs4 import BeautifulSoup
+import psycopg2
+
+# Функция для сбора данных с сайта
+def scrape_news():
+    url = 'https://news.ycombinator.com/'  # Сайт для парсинга
+    response = requests.get(url)  # Отправляем запрос
+    soup = BeautifulSoup(response.text, 'html.parser')  # Парсим HTML
+    titles = soup.find_all('a', class_='storylink')  # Находим заголовки новостей
+    
+    # Подключаемся к базе данных PostgreSQL
+    conn = psycopg2.connect("dbname=mydatabase user=postgres password=secret")
+    cur = conn.cursor()
+    
+    # Сохраняем заголовки в базу данных
+    for title in titles:
+        cur.execute("INSERT INTO news (title) VALUES (%s)", (title.text,))
+    conn.commit()  # Сохраняем изменения
+    cur.close()
+    conn.close()
+
+# Запуск скрапера
+if __name__ == '__main__':
+    scrape_news()
