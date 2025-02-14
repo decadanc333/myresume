@@ -1,0 +1,39 @@
+from aiogram import Bot, Dispatcher, types
+from aiogram.utils import executor
+import requests
+
+# Токен бота и ключи API
+API_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+WEATHER_API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'
+CURRENCY_API_KEY = 'YOUR_CURRENCY_API_KEY'
+
+# Инициализация бота и диспетчера
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher(bot)
+
+# Обработчик команды /start
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: types.Message):
+    await message.reply("Привет! Я бот для уведомлений. Используй /weather для получения погоды или /currency для курса валют.")
+
+# Обработчик команды /weather
+@dp.message_handler(commands=['weather'])
+async def send_weather(message: types.Message):
+    city = "Moscow"  # Город для получения погоды
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric"
+    response = requests.get(url).json()  # Получаем данные о погоде
+    weather = response['weather'][0]['description']  # Описание погоды
+    temp = response['main']['temp']  # Температура
+    await message.reply(f"Погода в {city}: {weather}, температура: {temp}°C")  # Отправляем сообщение
+
+# Обработчик команды /currency
+@dp.message_handler(commands=['currency'])
+async def send_currency(message: types.Message):
+    url = f"https://api.currencyapi.com/v3/latest?apikey={CURRENCY_API_KEY}&base_currency=USD"
+    response = requests.get(url).json()  # Получаем данные о курсе валют
+    rate = response['data']['RUB']['value']  # Курс USD к RUB
+    await message.reply(f"Курс USD к RUB: {rate:.2f}")  # Отправляем сообщение
+
+# Запуск бота
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)  # Запускаем бота
