@@ -1,0 +1,19 @@
+from selenium import webdriver
+import pytest
+
+# Фикстура для инициализации браузера
+@pytest.fixture
+def browser():
+    driver = webdriver.Chrome()  # Запускаем браузер Chrome
+    yield driver  # Возвращаем браузер для тестов
+    driver.quit()  # Закрываем браузер после теста
+
+# Тест для проверки входа в систему
+def test_login(browser):
+    browser.get('http://localhost:8000/login')  # Переходим на страницу входа
+    username = browser.find_element_by_name('username')  # Находим поле для логина
+    password = browser.find_element_by_name('password')  # Находим поле для пароля
+    username.send_keys('testuser')  # Вводим логин
+    password.send_keys('testpass')  # Вводим пароль
+    browser.find_element_by_tag_name('form').submit()  # Отправляем форму
+    assert 'Добро пожаловать' in browser.page_source  # Проверяем, что вход выполнен успешно
