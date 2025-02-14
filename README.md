@@ -45,19 +45,19 @@ Junior Python Developer
 1. REST API для интернет-магазина
 Описание: Разработка REST API для управления товарами, заказами и пользователями.  
 Технологии: Python (Flask), SQLAlchemy, PostgreSQL, JWT.  
-Ссылка: [github.com/decadanc333/ecommerce-api](https://github.com/ваш_username/ecommerce-api)
+Ссылка: https://github.com/decadanc333/myresume/blob/main/ecommerce-api)
 
 2. Telegram-бот для уведомлений
 Описание: Бот, который отправляет уведомления о курсах валют и погоде.  
 Технологии: Python (aiogram), Redis, API.  
-Ссылка: [github.com/decadanc333/telegram-bot](https://github.com/ваш_username/telegram-bot)
+Ссылка: https://github.com/decadanc333/myresume/blob/main/telegram-bot
 
 3. Веб-скрапер для сбора данных
 Описание: Скрипт для сбора данных с веб-сайтов и сохранения их в базу данных.  
 Технологии: Python (BeautifulSoup, Requests), PostgreSQL.  
-Ссылка: [github.com/decadanc333/web-scraper](https://github.com/ваш_username/web-scraper)
+Ссылка: https://github.com/decadanc333/myresume/blob/main/web-scraper)
 
 4. Автоматизация тестирования
 Описание: Написание автотестов для веб-приложения с использованием Selenium и Pytest.  
 Технологии: Python (Selenium, Pytest), Docker.  
-Ссылка: [github.com/decadanc333/automated-testing](https://github.com/ваш_username/automated-testing)
+Ссылка: https://github.com/decadanc333/myresume/blob/main/automated-testing)
