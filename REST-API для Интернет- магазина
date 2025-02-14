@@ -1,0 +1,43 @@
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+
+# Инициализация Flask-приложения
+app = Flask(__name__)
+
+# Настройка базы данных (PostgreSQL)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost:5432/mydatabase'
+app.config['JWT_SECRET_KEY'] = 'super-secret-key'  # Секретный ключ для JWT
+
+# Инициализация SQLAlchemy и JWT
+db = SQLAlchemy(app)
+jwt = JWTManager(app)
+
+# Модель для таблицы "Товары"
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)  # Уникальный идентификатор
+    name = db.Column(db.String(100), nullable=False)  # Название товара
+    price = db.Column(db.Float, nullable=False)  # Цена товара
+
+# Маршрут для получения списка товаров
+@app.route('/products', methods=['GET'])
+@jwt_required()  # Требуется аутентификация
+def get_products():
+    products = Product.query.all()  # Получаем все товары из базы данных
+    return jsonify([{'id': p.id, 'name': p.name, 'price': p.price} for p in products])  # Возвращаем JSON
+
+# Маршрут для добавления нового товара
+@app.route('/products', methods=['POST'])
+@jwt_required()  # Требуется аутентификация
+def add_product():
+    data = request.get_json()  # Получаем данные из запроса
+    new_product = Product(name=data['name'], price=data['price'])  # Создаем новый товар
+    db.session.add(new_product)  # Добавляем товар в базу данных
+    db.session.commit()  # Сохраняем изменения
+    return jsonify({'message': 'Product added'}), 201  # Возвращаем сообщение об успехе
+
+# Запуск приложения
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Создаем таблицы в базе данных
+    app.run(debug=True)  # Запускаем сервер
